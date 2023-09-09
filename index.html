@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Flashing Colors</title>
+  <title>Flashing Colors and Music</title>
   <style>
-    /* Ensure the div takes the full width and height */
     #flashDiv {
       width: 100vw;
       height: 100vh;
@@ -16,10 +15,12 @@
 <body>
 
   <div id="flashDiv"></div>
-<audio id="myAudio" autoplay loop>
-  <source src="soothing-music.mp3" type="audio/mp3">
-  Your browser does not support the audio element.
-</audio>
+
+  <audio id="myAudio">
+    <source src="soothing-music.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
   <script>
     // Trigger fullscreen
     function goFullScreen() {
@@ -36,38 +37,16 @@
     setInterval(() => {
       document.getElementById('flashDiv').style.backgroundColor = colorState ? 'red' : 'blue';
       colorState = !colorState;
-    }, 400);
+    }, 10);
 
-    // Ask the user if they're sure they want to exit
-    window.addEventListener('beforeunload', function (e) {
-      e.preventDefault();
-      e.returnValue = '';
-
-      const exitConfirm = document.createElement('div');
-      exitConfirm.innerHTML = `
-        <p>Are you sure you want to exit?</p>
-        <button id="yesBtn">Yes</button>
-        <button id="noBtn">No</button>
-      `;
-      document.body.appendChild(exitConfirm);
-
-      // Function to reopen the page in a new tab
-      function reopenPage() {
-        window.open(window.location.href, '_blank');
-      }
-
-      // Attach events to buttons
-      document.getElementById('yesBtn').addEventListener('click', () => {
-        reopenPage();
-        window.close();
-      });
-
-      document.getElementById('noBtn').addEventListener('click', () => {
-        reopenPage();
-        document.body.removeChild(exitConfirm);
+    // Autoplay audio after DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      const audioElement = document.getElementById('myAudio');
+      audioElement.play()
+      .catch((error) => {
+        console.log('Autoplay prevented:', error);
       });
     });
-
   </script>
 
 </body>
