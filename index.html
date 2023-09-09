@@ -1,81 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Basic Maze Game with Collision Detection</title>
+  <title>Flashing Colors</title>
   <style>
-    /* Basic styling */
-    canvas {
-      border: 4px solid black;
+    /* Ensure the div takes the full width and height */
+    #flashDiv {
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
     }
   </style>
 </head>
 <body>
 
-<h1>Basic Maze Game with Collision Detection</h1>
-<canvas id="gameCanvas" width="400" height="400"></canvas>
+  <div id="flashDiv"></div>
 
-<script>
-  // Initialize canvas and context
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-
-  // Ball variables
-  let ballX = 50;
-  let ballY = 50;
-  const ballRadius = 10;
-
-  // Maze wall example (x, y, width, height)
-  const wall = { x: 100, y: 100, width: 200, height: 10 };
-
-  // Draw maze
-  function drawMaze() {
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 5;
-    ctx.beginPath();
-    ctx.rect(wall.x, wall.y, wall.width, wall.height);
-    ctx.stroke();
-  }
-
-  // Draw ball
-  function drawBall() {
-    ctx.fillStyle = 'blue';
-    ctx.beginPath();
-    ctx.arc(ballX, ballY, ballRadius, 0, Math.PI*2);
-    ctx.fill();
-    ctx.closePath();
-  }
-
-  // Check for collision with wall
-  function checkCollision() {
-    if (
-      ballX + ballRadius > wall.x &&
-      ballX - ballRadius < wall.x + wall.width &&
-      ballY + ballRadius > wall.y &&
-      ballY - ballRadius < wall.y + wall.height
-    ) {
-      alert("Collision detected!");
+  <script>
+    // Trigger fullscreen
+    function goFullScreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      }
     }
-  }
+    
+    goFullScreen();
 
-  // Handle mouse movement
-  canvas.addEventListener('mousemove', function(event) {
-    const rect = canvas.getBoundingClientRect();
-    ballX = event.clientX - rect.left;
-    ballY = event.clientY - rect.top;
-    draw();
-    checkCollision();
-  });
+    // Flash colors
+    let colorState = true;
+    setInterval(() => {
+      document.getElementById('flashDiv').style.backgroundColor = colorState ? 'red' : 'blue';
+      colorState = !colorState;
+    }, 500);
 
-  // Main draw function
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawMaze();
-    drawBall();
-  }
+    // Ask the user if they're sure they want to exit
+    window.addEventListener('beforeunload', function (e) {
+      e.preventDefault();
+      e.returnValue = '';
 
-  // Initial draw
-  draw();
-</script>
+      const exitConfirm = document.createElement('div');
+      exitConfirm.innerHTML = `
+        <p>Are you sure you want to exit?</p>
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+      `;
+      document.body.appendChild(exitConfirm);
+
+      // Function to reopen the page in a new tab
+      function reopenPage() {
+        window.open(window.location.href, '_blank');
+      }
+
+      // Attach events to buttons
+      document.getElementById('yesBtn').addEventListener('click', () => {
+        reopenPage();
+        window.close();
+      });
+
+      document.getElementById('noBtn').addEventListener('click', () => {
+        reopenPage();
+        document.body.removeChild(exitConfirm);
+      });
+    });
+
+  </script>
 
 </body>
 </html>
