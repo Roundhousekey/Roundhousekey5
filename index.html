@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Flashing Colors and Music</title>
+  <title>Flashing Colors, Exit Button, and Music</title>
   <style>
     #flashDiv {
       width: 100vw;
@@ -10,11 +10,26 @@
       top: 0;
       left: 0;
     }
+
+    #centerSquare {
+      width: 200px;
+      height: 200px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ccc;
+      text-align: center;
+      line-height: 200px;
+    }
   </style>
 </head>
 <body>
 
   <div id="flashDiv"></div>
+  <div id="centerSquare">
+    <button id="exitButton">Exit</button>
+  </div>
 
   <audio id="myAudio">
     <source src="soothing-music.mp3" type="audio/mp3">
@@ -22,29 +37,20 @@
   </audio>
 
   <script>
-    // Trigger fullscreen
-    function goFullScreen() {
-      const elem = document.documentElement;
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      }
-    }
-    
-    goFullScreen();
-
     // Flash colors
     let colorState = true;
     setInterval(() => {
       document.getElementById('flashDiv').style.backgroundColor = colorState ? 'red' : 'blue';
       colorState = !colorState;
-    }, 10);
+    }, 200);
 
-    // Autoplay audio after DOM is fully loaded
-    document.addEventListener('DOMContentLoaded', function() {
+    // Play audio at 100% volume when "Exit" button is clicked
+    document.getElementById('exitButton').addEventListener('click', function() {
       const audioElement = document.getElementById('myAudio');
+      audioElement.volume = 1.0;
       audioElement.play()
       .catch((error) => {
-        console.log('Autoplay prevented:', error);
+        console.log('Playback prevented:', error);
       });
     });
   </script>
