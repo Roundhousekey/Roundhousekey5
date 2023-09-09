@@ -1,43 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Basic Website</title>
+  <title>Basic Maze Game with Collision Detection</title>
   <style>
-    /* Add some basic styling */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    header {
-      text-align: center;
-      background-color: #f2f2f2;
-      padding: 20px;
-    }
-    #banner {
-      width: 100%;
-      max-height: 300px;
+    /* Basic styling */
+    canvas {
+      border: 4px solid black;
     }
   </style>
 </head>
 <body>
 
-  <!-- Header Section -->
-  <header>
-    <h1>Welcome to My Basic Website</h1>
-    <img id="banner" src="https://via.placeholder.com/1200x300" alt="Banner image">
-  </header>
+<h1>Basic Maze Game with Collision Detection</h1>
+<canvas id="gameCanvas" width="400" height="400"></canvas>
 
-  <!-- Content Section -->
-  <main>
-    <h2>About This Website</h2>
-    <p>This is a basic website created for demonstration purposes.</p>
+<script>
+  // Initialize canvas and context
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
 
-    <h2>Why Create a Basic Website?</h2>
-    <p>A basic website serves as a starting point for further development and learning.</p>
+  // Ball variables
+  let ballX = 50;
+  let ballY = 50;
+  const ballRadius = 10;
 
-    <h2>What You Can Do Next</h2>
-    <p>From here, you can add more features like forms, buttons, and interactive elements to make your website more engaging.</p>
-  </main>
+  // Maze wall example (x, y, width, height)
+  const wall = { x: 100, y: 100, width: 200, height: 10 };
+
+  // Draw maze
+  function drawMaze() {
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.rect(wall.x, wall.y, wall.width, wall.height);
+    ctx.stroke();
+  }
+
+  // Draw ball
+  function drawBall() {
+    ctx.fillStyle = 'blue';
+    ctx.beginPath();
+    ctx.arc(ballX, ballY, ballRadius, 0, Math.PI*2);
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  // Check for collision with wall
+  function checkCollision() {
+    if (
+      ballX + ballRadius > wall.x &&
+      ballX - ballRadius < wall.x + wall.width &&
+      ballY + ballRadius > wall.y &&
+      ballY - ballRadius < wall.y + wall.height
+    ) {
+      alert("Collision detected!");
+    }
+  }
+
+  // Handle mouse movement
+  canvas.addEventListener('mousemove', function(event) {
+    const rect = canvas.getBoundingClientRect();
+    ballX = event.clientX - rect.left;
+    ballY = event.clientY - rect.top;
+    draw();
+    checkCollision();
+  });
+
+  // Main draw function
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawMaze();
+    drawBall();
+  }
+
+  // Initial draw
+  draw();
+</script>
 
 </body>
 </html>
